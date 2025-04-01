@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class Collection extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'slug',
+        'description',
+    ];
+
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            $model->slug = Str::slug($model->name);
+        });
+    }
+
+    public function historicalItems()
+    {
+        return $this->belongsToMany(HistoricalItem::class)->withTimestamps();
+    }
+}

@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Livewire\Timeline\Page;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +19,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware('auth', 'verified')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    Route::get('/timeline/category/{category:slug}', Page::class)->name('timeline.category');
+    Route::get('/timeline/subcategory/{subCategory:slug}', Page::class)->name('timeline.subcategory');
+    Route::get('/timeline/collections/{collection:slug}', Page::class)->name('timeline.collections');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
